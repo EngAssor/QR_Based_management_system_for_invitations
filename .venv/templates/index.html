@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>360 Activation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #059669;
+            --error-color: #dc2626;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .camera-container {
+            background: var(--card-background);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #reader {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            background: var(--card-background);
+        }
+
+        #reader video {
+            border-radius: 8px;
+        }
+
+        .camera-select {
+            width: 100%;
+            max-width: 300px;
+            margin: 1rem auto;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--card-background);
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            display: block;
+        }
+
+        .camera-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        #result {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success {
+            background-color: #ecfdf5;
+            border: 1px solid #a7f3d0;
+        }
+
+        .error {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .visitor-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row i {
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            margin-right: 0.5rem;
+            min-width: 80px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: var(--primary-color);
+            color: white;
+            width: auto;
+            margin: 1rem 0;
+        }
+
+        .button i {
+            margin-right: 0.5rem;
+        }
+
+        .button:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge i {
+            margin-right: 0.5rem;
+        }
+
+        .status-badge.success {
+            background-color: #ecfdf5;
+            color: var(--success-color);
+            border: none;
+        }
+
+        .status-badge.error {
+            background-color: #fef2f2;
+            color: var(--error-color);
+            border: none;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>360 Activation</h1>
+            <p>Scan QR code to verify visitor registration</p>
+        </div>
+
+        <div class="card">
+            <select id="cameraSelect" class="camera-select">
+                <option value="">Loading cameras...</option>
+            </select>
+            <div class="camera-container">
+                <div id="reader"></div>
+            </div>
+        </div>
+
+        <div id="result" class="card"></div>
+    </div>
+
+    <script>
+        let html5QrcodeScanner = null;
+        let selectedCamera = null;
+
+        // Camera handling functions
+        async function getCameraList() {
+            try {
+                const devices = await Html5Qrcode.getCameras();
+                // Sort cameras to prioritize back camera
+                return devices.sort((a, b) => {
+                    const labelA = a.label.toLowerCase();
+                    const labelB = b.label.toLowerCase();
+                    // Most mobile devices label back camera with "back" or "environment"
+                    const isBackA = labelA.includes('back') || labelA.includes('environment');
+                    const isBackB = labelB.includes('back') || labelB.includes('environment');
+                    return isBackB - isBackA; // Put back cameras first
+                });
+            } catch (err) {
+                console.error('Error getting cameras:', err);
+                return [];
+            }
+        }
+
+        async function populateCameraOptions() {
+            try {
+                const devices = await getCameraList();
+                const select = document.getElementById('cameraSelect');
+                select.innerHTML = ''; // Clear existing options
+
+                if (devices.length === 0) {
+                    select.innerHTML = '<option value="">No cameras found</option>';
+                    return;
+                }
+
+                devices.forEach(device => {
+                    const option = document.createElement('option');
+                    option.value = device.id;
+                    option.text = device.label || `Camera ${devices.indexOf(device) + 1}`;
+                    select.appendChild(option);
+                });
+
+                // Try to select back camera by default
+                const backCamera = devices.find(device => {
+                    const label = device.label.toLowerCase();
+                    return label.includes('back') || label.includes('environment');
+                });
+
+                if (backCamera) {
+                    select.value = backCamera.id;
+                    selectedCamera = backCamera.id;
+                } else {
+                    selectedCamera = devices[0].id;
+                }
+
+                startScanner(selectedCamera);
+            } catch (err) {
+                console.error('Error setting up cameras:', err);
+                document.getElementById('cameraSelect').innerHTML =
+                    '<option value="">Camera access denied</option>';
+            }
+        }
+
+        function startScanner(cameraId) {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+            }
+
+            const html5QrCode = new Html5Qrcode("reader");
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0,
+                facingMode: "environment" // Prefer back camera
+            };
+
+            html5QrCode.start(
+                cameraId,
+                config,
+                onScanSuccess,
+                onScanFailure
+            ).catch(err => {
+                console.error('Error starting scanner:', err);
+                document.getElementById('result').innerHTML =
+                    `<div class="status-badge error">
+                        <i class="fas fa-exclamation-circle"></i>Error starting scanner
+                    </div>`;
+            });
+
+            html5QrcodeScanner = html5QrCode;
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.stop();
+            }
+
+            fetch('/validate-qr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({qr_data: decodedText})
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+
+                if (data.valid) {
+                    resultDiv.className = 'card';
+                    resultDiv.innerHTML = `
+                        <div class="status-badge success">
+                            <i class="fas fa-check-circle"></i>
+                            Valid Visitor
+                        </div>
+                        <div class="visitor-card">
+                            <div class="info-row">
+                                <i class="fas fa-user"></i>
+                                <span class="info-label">Name:</span>
+                                <span>${data.visitor_data.name}</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-phone"></i>
+                                <span class="info-label">Phone:</span>
+                                <span>${data.visitor_data.phone_number}</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="info-label">State:</span>
+                                <span>${data.visitor_data.state}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.className = 'card';
+                    resultDiv.innerHTML = `
+                        <div class="status-badge error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Error
+                        </div>
+                        <p>${data.message}</p>
+                    `;
+                }
+
+                const scanButton = document.createElement('button');
+                scanButton.className = 'button';
+                scanButton.innerHTML = '<i class="fas fa-camera"></i>Scan Another';
+                scanButton.onclick = () => {
+                    resultDiv.style.display = 'none';
+                    startScanner(selectedCamera);
+                };
+                resultDiv.appendChild(scanButton);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'card';
+                resultDiv.innerHTML = `
+                    <div class="status-badge error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Error
+                    </div>
+                    <p>Error processing QR code</p>
+                `;
+            });
+        }
+
+        function onScanFailure(error) {
+            // Only log critical errors, ignore regular scan failures
+            if (!error.includes("No QR code found")) {
+                console.warn(`QR Code scan failure: ${error}`);
+            }
+        }
+
+        // Handle camera switching more reliably
+        document.getElementById('cameraSelect').addEventListener('change', async function(e) {
+            selectedCamera = e.target.value;
+            if (selectedCamera) {
+                if (html5QrcodeScanner) {
+                    await html5QrcodeScanner.stop();
+                }
+                setTimeout(() => startScanner(selectedCamera), 100); // Small delay to ensure clean switch
+            }
+        });
+
+        // Initialize with proper camera handling
+        document.addEventListener('DOMContentLoaded', () => {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                populateCameraOptions();
+            } else {
+                document.getElementById('cameraSelect').innerHTML =
+                    '<option value="">Camera API not supported</option>';
+            }
+        });
+    </script>
+</body>
+</html>

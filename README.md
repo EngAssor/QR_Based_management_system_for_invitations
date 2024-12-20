@@ -1,1 +1,2 @@
 # QR_Based_management_system_for_invitations
+This is a Guest Management System designed to streamline the check-in process for events or venues. The system generates unique QR codes containing guests' data, such as their name, contact information, and reservation details. When guests arrive, the QR codes are scanned to verify their information, ensuring a seamless and efficient check-in experience
